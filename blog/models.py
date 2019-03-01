@@ -1,34 +1,7 @@
-import os
-
-from flask import Flask, render_template, url_for
-from flask_sqlalchemy import SQLAlchemy
+# models.py
 from datetime import datetime
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///site.db"
-#app.config["SQLALCHEMY_DATABASE_URI"] =\
-#    "sqlite:///" + os.path.join(basedir, "data.sqlite")
-app.config["SQLAlCHEMY_COMMIT_ON_TEARDOWN"] = True
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ECHO"] = True
-db = SQLAlchemy(app)
-
-posts = [
-    {
-        'author': 'Train',
-        'title': 'Second post',
-        'content': 'Keep going!',
-        'date_posted': 'March 2, 2019'
-    },
-    {
-        'author': 'Train',
-        'title': 'First post',
-        'content': 'Good Job!',
-        'date_posted': 'March 1, 2019'
-    }
-]
+from blog import db
 
 
 class User(db.Model):
@@ -55,18 +28,3 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"User('{self.title}', '{self.date_posted}')"
-
-
-@app.route("/")
-@app.route("/home")
-def home():
-    return render_template('home.html', posts=posts)
-
-
-@app.route("/about")
-def about():
-    return render_template('about.html', title='About')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
